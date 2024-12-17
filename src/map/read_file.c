@@ -112,14 +112,16 @@ void	fill_matrix(t_point *z_line, char *line)
 	char	**nums;
 	int		i;
 	char	**value_and_color;
+	
 	i = 0;
 	nums = ft_split(line, ' ');
 	if (!nums)
 	{
 		free(line);
+		free(nums);
 		return ;
 	}
-	while(nums[i] != NULL)
+	while(nums[i])
 	{
 		if (!check_color(nums[i], &z_line[i]))
 		{
@@ -142,21 +144,20 @@ void	read_file(char *file_name, t_fdf *data)
 
 	data->height = get_height(file_name);
 	data->width = get_width(file_name);
-	data->z_matrix = (t_point *)malloc(sizeof(t_point) * (data->height * data->width));
-	if (!data->z_matrix)
+	if (data->width <= 0 || data->height <= 0)
 		return ;
 	fd = open(file_name, O_RDONLY);
 	if (fd < 0)
-	{
-		free(data->z_matrix);
 		return ;
-	}
+	data->z_matrix = (t_point *)malloc(sizeof(t_point) * (data->height * data->width));
+	if (!data->z_matrix)
+		return ;
 	i = 0;
 	while (i < data->height)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
-			break;
+			break ;
 		fill_matrix(&data->z_matrix[i * data->width], line);
 		free(line);
 		i++;

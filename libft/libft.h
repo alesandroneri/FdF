@@ -26,9 +26,10 @@ int		ft_atoi(const char *nptr);
 char	*ft_strdup(const char *s);
 char	**ft_split(char const *s, char c);
 char	*ft_strjoin(char *s1, char *s2);
-int		ft_atoi_base(const char *str, int str_base);
+int		ft_atoi_base(char *str, int str_base);
 int	ft_isdigit(int c);
 int	ft_atoi_hexa(const char *str);
+
 
 /*
 ft_printf functions.

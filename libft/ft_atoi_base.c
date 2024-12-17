@@ -22,7 +22,7 @@ int		valid_value(char c)
 	return (0);
 }
 
-int		ft_atoi_base(const char *str, int str_base)
+int		ft_atoi_base(char *str, int str_base)
 {
 	int result;
 	int sign;
@@ -31,14 +31,12 @@ int		ft_atoi_base(const char *str, int str_base)
     i = 0;
 	result = 0;
     sign = 1;
-	if (!str || *str == '\0')
-		return (0);
-	if (str_base < 2 || str_base > 16)
+	if (!str || str_base < 2 || str_base > 16 || *str == '\0')
 		return (0);
 	while (str[i] <= 32 || str[i] == 127)
 		i++;
-    if (str[i] == '0' && (str[i + 1] == 'x' || str[i + 1] == 'X'))
-            i = i + 2;
+    if (str[i] == '0' && (str[i + 1] == 'x' || str[i + 1] == 'X') && str_base == 16)
+            i += 2;
 	while (str[i] == '-' || str[i] == '+')
     {
             if (str[i] == '-')
@@ -47,7 +45,7 @@ int		ft_atoi_base(const char *str, int str_base)
                 return (0); 
         i++;
     }
-	while (is_base(str[i], str_base))
+	while (str[i] != '\0' && is_base(str[i], str_base))
 		result = (result * str_base) + valid_value(str[i++]);
 	return (result * sign);
 }

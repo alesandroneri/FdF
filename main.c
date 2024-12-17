@@ -17,18 +17,48 @@ int handle_key(int key, t_fdf *data)
     ft_printf("%d\n", key);
 
     if (key == 119 || key == 65362)
-        data->shift_y -=10;
+        data->graphics.shift_y -=10;
     if (key == 115 || key == 65364)
-        data->shift_y +=10;
+        data->graphics.shift_y +=10;
     if (key == 97 || key == 65361)
-        data->shift_x -=10;
+        data->graphics.shift_x -=10;
     if (key == 100 || key == 65363)
-        data->shift_x +=10;
-    if (key == 65451) // Tecla '+'
-        data->zoom += 1;
-    if (key == 65453 && data->zoom > 1) // Tecla '-'
-        data->zoom -= 1;
+        data->graphics.shift_x +=10;
+    if (key == 65451 && data->graphics.zoom < 21) // Tecla '+'
+        data->graphics.zoom += 1;
+    if (key == 65453 && data->graphics.zoom > 3) // Tecla '-'
+        data->graphics.zoom -= 1;
+    if (key == 65431)
+        data->graphics.depth_factor += 0.1;
+    if (key == 65433)
+        data->graphics.depth_factor -= 0.1;
+    if (key == 120)
+    {
+        data->graphics.angle_x += 0.1;
+        printf("angulo_x: %f\n", data->graphics.angle_x);
+    }
+    if (key == 121)
+    {
+        data->graphics.angle_y += 0.1;
+        printf("angulo_y: %f\n", data->graphics.angle_y);
+    }
+    if (key == 122)
+    {
+        data->graphics.angle_z += 0.1;
+        printf("angulo_z: %f\n", data->graphics.angle_z);
+    }
+    if (key == 105)
+    {
+        data->graphics.isometric_angle += 0.1;
+        printf("angulo_isometrico: %f\n", data->graphics.isometric_angle);
+    }
     // Fechar o programa
+    if (key == 65307) // Tecla 'ESC'
+    {
+        mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+        free(data->z_matrix);
+        exit(0);
+    }
     if (key == 65307) // Tecla 'ESC'
     {
         mlx_destroy_window(data->mlx_ptr, data->win_ptr);
@@ -98,8 +128,8 @@ int main(int ac, char **av)
     t_fdf *data;
     int i;
     int j;
-    int win_width;
-    int win_height;
+    float map_center_x;
+    float map_center_y;
 
     i = 0;
     j = 0;
@@ -116,23 +146,35 @@ int main(int ac, char **av)
             j++;
         }
     }
-    win_width = ft_atoi(av[2]);
-    win_height = ft_atoi(av[3]);
+    // data->win_width = ft_atoi(av[2]);
+    // data->win_height = ft_atoi(av[3]);
 
     data = (t_fdf *)malloc(sizeof(t_fdf));
+    data->win_width = ft_atoi(av[2]);
+    data->win_height = ft_atoi(av[3]);
     if (data == NULL)
         return (MALLOC_ERROR);
-    // data->z_matrix = NULL;
-    // data->height = 0;
-    // data->width = 0;
-    // data->mlx_ptr = NULL;
-    // data->win_ptr = NULL;
+
     read_file(av[1], data);
 	data->mlx_ptr = mlx_init();
-	data->win_ptr = mlx_new_window(data->mlx_ptr, win_width, win_height, "FDF");
-    data->zoom = 20;
-
-    //bresenham(10, 10, 600, 300, data);
+	data->win_ptr = mlx_new_window(data->mlx_ptr, data->win_width, data->win_height, "FDF");
+    data->img.img = mlx_new_image(data->mlx_ptr, data->width, data->height);
+    data->img.addr = mlx_get_data_addr(data->img.img, &data->img.bpp, &data->img.line_length, &data->img.endian);
+    data->graphics.zoom = 4;
+    data->graphics.angle_x = 0.1;
+    //data->angle_x = 0;
+    data->graphics.angle_y = 0.3;
+    //data->angle_y = 0;
+    //data->angle_z = M_PI / 6;
+    data->graphics.angle_z = 5.29;
+    data->graphics.isometric_angle = 0.6;
+    //data->isometric_angle = 1;
+    data->graphics.depth_factor = 0.3;
+    map_center_x = (data->width - 1) * (data->graphics.zoom / 50);
+    map_center_y = (data->height - 1) * (data->graphics.zoom / 50);
+    data->graphics.shift_x = (data->win_width / 2) - map_center_x;
+    data->graphics.shift_y = (data->win_height / 2) - map_center_y;
+    
     draw(data);
     mlx_hook(data->win_ptr, 17, 0, close_window, data); // Evento do botão "X"
 	mlx_key_hook(data->win_ptr, handle_key, data); // Evento de teclado

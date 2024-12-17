@@ -14,60 +14,59 @@
 
 #include "libft/libft.h"
 #include "minilibx-linux/mlx.h"
+#include <stdio.h>
 #include <math.h>
 
-typedef struct s_point
-{
-	int	value; // alterar para z
-	char *hex;
-} t_point ;
+// Struct para armazenar os pontos do mapa (valor de z e cor hexadecimal)
+typedef struct s_point {
+    int value;        // Valor da coordenada z
+    char *hex;    // Cor do ponto em formato hexadecimal
+} t_point;
 
-typedef struct s_graph
-{
-	int zoom;
-	int shift_x;
-	int shift_y;
+// Struct para armazenar o estado do mouse
+typedef struct s_mouse {
+    int active_click; // Indica se o botão do mouse está pressionado
+} t_mouse;
 
-} t_graph ;
+// Struct para gerenciar a imagem e a janela do mlx
+typedef struct s_img {
+    void *mlx;           // Ponteiro para o mlx
+    void *win;           // Ponteiro para a janela
+    void *img;           // Ponteiro para a imagem
+    char *addr;          // Endereço da imagem
+	int width;           // Largura da imagem
+	int height;          // Altura da imagem
+    int bpp;             // Bits por pixel
+    int line_length;     // Bytes por linha da imagem
+    int endian;          // Endianess da imagem
+} t_img;
 
-typedef struct s_mouse
-{
-	int active_click;
+// Struct para armazenar o estado gráfico (zoom, translação, ângulos, etc.)
+typedef struct s_graphics {
+    int zoom;           // Fator de zoom para o mapa
+    int shift_x;        // Translação no eixo X
+    int shift_y;        // Translação no eixo Y
+    float angle_x;      // Ângulo de rotação no eixo X
+    float angle_y;      // Ângulo de rotação no eixo Y
+    float angle_z;      // Ângulo de rotação no eixo Z
+    float isometric_angle; // Ângulo para projeção isométrica
+    float depth_factor; // Fator de profundidade
+    int color;          // Cor padrão do mapa
+} t_graphics;
 
-} t_mouse ;
-
-typedef struct s_fdf
-{
-	int	width;
-	int	height;
-	//t_point	**z_matrix;
-	t_point	*z_matrix;
-	int zoom;
-	int color;
-	int shift_x;
-	int shift_y;
-	int keys[6];
-
-	void	*mlx_ptr;
-	void	*win_ptr;
-}	t_fdf;
-
-typedef struct s_img
-{
-	void *img_ptr;
-	char *img_data;
-	int	bpp;
-	int len_line;
-
-} t_img ;
-
-typedef struct s_gen_wfm
-{
-	t_fdf *data;
-	t_graph *graph;
-	t_img	*img_data;
-	t_mouse *mouse_set;
-} t_gen_wfm ;
+// Struct principal do FDF que agrupa todas as informações
+typedef struct s_fdf {
+    int width;            // Largura do mapa
+    int height;           // Altura do mapa
+    t_point *z_matrix;    // Matriz de pontos (z) do mapa
+    t_graphics graphics;  // Informações gráficas (zoom, rotação, etc.)
+    t_img img;            // Informações de imagem e janela
+    t_mouse mouse;        // Informações do mouse
+    void *mlx_ptr;        // Ponteiro para o mlx
+    void *win_ptr;        // Ponteiro para a janela do mlx
+    int win_width;        // Largura da janela
+    int win_height;       // Altura da janela
+} t_fdf;
 
 void read_file(char *file_name, t_fdf *data);
 void bresenham(float x, float y, float x1, float y1, t_fdf *data);
