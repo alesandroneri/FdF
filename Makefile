@@ -2,9 +2,9 @@ NAME = fdf
 LIBFT = libft/
 GNL = get_next_line/
 MLX = minilibx/
-SRC =	fdf.c \
-		srcs/ \
-		
+SRC =	fdf.c/ \
+			src/map/read_file.c \
+			src/graphics/draw.c \
 
 CC = cc
 
@@ -14,7 +14,6 @@ CC_FLAGS = -g -Wall -Wextra -Werror -I$(INCLUDE)
 
 OBJS = $(SRC:.c=.o)
 
-BONUS_OBJS = $(BONUS_SRC:.c=.o)
 
 $(NAME): $(OBJS)
 	ar rc $(NAME) $(OBJS)
@@ -24,12 +23,8 @@ $(NAME): $(OBJS)
 
 all: $(NAME)
 
-bonus: $(BONUS_OBJS) $(NAME)
-	ar rc $(NAME) $(BONUS_OBJS)
-
 clean:
-	rm -f $(OBJS) $(BONUS_OBJS)
-
+	rm -f $(OBJS) 
 fclean: clean
 	rm -rf $(NAME)
 
@@ -38,13 +33,12 @@ re: fclean $(NAME)
 run: re
 	clear
 	$(CC) $(CC_FLAGS) main.c $(NAME)
-	./a.out
+	./a.out test_maps/42.fdf 1920 1080
 
 r:
 	make fclean -C $(LIBFT)
 	make -C $(LIBFT)
 	make clean -C $(LIBFT)
-	$(CC) -g main.c read_file.c $(LIBFT)libft.a
 val:
 	valgrind ./a.out test_maps/42.fdf
 

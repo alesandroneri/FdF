@@ -88,13 +88,13 @@ int check_color(char *num, t_point *z_line)
     // Se a split retornou apenas um elemento, trate isso como um caso especial
     if (value_and_color[1] == NULL)
 	{
-        z_line->value = ft_atoi(value_and_color[0]); // Converta o valor
-        z_line->hex = ft_strdup("0xFFFFFF"); // Cor padrão
+        z_line->z_value = ft_atoi(value_and_color[0]); // Converta o valor
+        z_line->color_hex = ft_strdup("0xFFFFFF"); // Cor padrão
     }
 	else
 	{
-        z_line->value = ft_atoi(value_and_color[0]);
-        z_line->hex = ft_strdup(value_and_color[1]);
+        z_line->z_value = ft_atoi(value_and_color[0]);
+        z_line->color_hex = ft_strdup(value_and_color[1]);
     }
     // Libere a memória alocada
     free(value_and_color[0]);

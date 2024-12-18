@@ -1,0 +1,22 @@
+#include "keys.h"
+
+// Função para lidar com todos os eventos de teclado
+static int handle_keys(int key, t_gen_res *gen_data)
+{
+    movement_keys(key, gen_data); // Chama a função que lida com movimentos no mapa
+    zoom_keys(key, gen_data); // Chama a função que lida com ajuste de zoom no mapa
+    depth_keys(key, gen_data); // Chama a função que lida com ajustes de relevo no mapa
+    rotation_keys(key, gen_data); // Chama a função que lida com rotação do mapa
+    exit_keys(key, gen_data); // Chama a função que lida com o fechamento do mapa pressionando o esc
+    //mlx_clear_window(gen_data->data->mlx_ptr, gen_data->data->win_ptr);
+    draw(gen_data);
+    return (0);
+}
+
+// Função para aguardar os eventos que foram pré-determinados anteriormente e executar as ações necessárias.
+void   setup_hooks(t_gen_res *gen_data)
+{
+    mlx_hook(gen_data->data->win_ptr, 17, 0, mlx_loop_end, gen_data->data->win_ptr); // Evento do botão "X"
+	mlx_key_hook(gen_data->data->win_ptr, handle_keys, gen_data); // Eventos de teclado
+}
+
