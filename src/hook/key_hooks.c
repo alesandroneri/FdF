@@ -50,7 +50,6 @@ void exit_keys(int key, t_gen_res *gen_data)
         mlx_destroy_window(gen_data->data->mlx_ptr, gen_data->data->win_ptr);
         free(gen_data->data->z_matrix);
         free(gen_data->data);
-        free(gen_data);
         exit(0);
     }
         //return (gen_data->data->mlx_ptr);

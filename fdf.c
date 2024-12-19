@@ -1,7 +1,9 @@
 #include "fdf.h"
 
-# define MALLOC_ERROR 1
-# define READ_FILE_ERROR 1
+# define MAX_WIN_WIDTH 1920
+# define MAX_WIN_HEIGHT 1080
+# define MIN_WIN_WIDTH 800
+# define MIN_WIN_HEIGHT 600
 
 
 // Função para inicializar a imagem
@@ -30,11 +32,17 @@ void setup_variables(t_gen_res *gen_data)
 }
 
 // Função para inicializar o server
-int init(t_gen_res *gen_data)
+int init(char av2, char av3, t_gen_res *gen_data)
 {
     gen_data->data->mlx_ptr = mlx_init();
     if (!gen_data->data->mlx_ptr)
         return (0);
+    if (!ft_isdigit(av2) || !ft_isdigit(av3))
+    {
+        ft_putendl_fd("Invalid window!", 2);
+        return (0);
+    }
+
     gen_data->data->win_width = 1920;
     gen_data->data->win_height = 1080;
     gen_data->data->win_ptr = NULL;
@@ -50,7 +58,7 @@ int init(t_gen_res *gen_data)
 
 
 // Função para mallocar as structs
-int malloc_resources(t_gen_res *gen_data)
+int malloc_structs_resources(t_gen_res *gen_data)
 {
     gen_data->data = (t_fdf *)malloc(sizeof(t_fdf));
     if (!gen_data->data)
@@ -76,23 +84,38 @@ int malloc_resources(t_gen_res *gen_data)
 int main(int ac, char **av)
 {
     t_gen_res gen_data;
-    if (ac != 2)
+    int i;
+    int j;
+
+    if (ac < 2 || ac > 4)
     {
         ft_putendl_fd("Invalid number of arguments!", 2);
         return (0);
     }
-    if (!malloc_resources(&gen_data))
+    // i = -1;
+    // j = -1;
+    // if (av[2] && av[3])
+    // {
+    //     while (av[2][i++] != '\0' && av[3][j++] != '\0')
+    //     {
+    //         if (!ft_isdigit(av[2][i]) || !ft_isdigit(av[3][j]))
+    //         {
+    //             ft_putendl_fd("Invalid window!", 2);
+    //             return (0);
+    //         }
+    //     }
+    // }
+
+    if (!malloc_structs_resources(&gen_data))
     {
         ft_putendl_fd("Memory allocation failed!", 2);
         return (0);
     }
     read_file(av[1], gen_data.data);
-    if (init(&gen_data))
-    {
-        setup_image(&gen_data);
-        setup_hooks(&gen_data);
-        mlx_loop(gen_data.data->mlx_ptr);
-    }
-    // free_resources(&gen_data);
-    // free_data(gen_data->data);
+    init(&gen_data);
+    setup_image(&gen_data);
+    setup_hooks(&gen_data);
+    mlx_loop(gen_data.data->mlx_ptr);
+    free_resources(&gen_data);
+    free_server(&gen_data);
 }

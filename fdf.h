@@ -87,8 +87,9 @@ void draw(t_gen_res *gen_data);
 // Funções de liberação de memória
 void    free_data(t_fdf *data);
 void free_resources(t_gen_res *gen_data);
+void free_server(t_gen_res *gen_data);
 
-// Funções de hook
+// Funções de hook eventos de teclado
 void movement_keys(int key, t_gen_res *gen_data);
 void zoom_keys(int key, t_gen_res *gen_data);
 void depth_keys(int key, t_gen_res *gen_data);

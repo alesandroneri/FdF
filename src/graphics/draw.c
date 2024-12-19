@@ -1,11 +1,14 @@
 #include "../../fdf.h"
 
+// Função para pegar o valor máximo
 static int maximum(int a, int b)
 {
     if (a > b)
         return (a);
     return (b);
 }
+
+// Função para pegar o modulo do número
 static float mod(float i)
 {
     if (i < 0)
@@ -81,18 +84,35 @@ static void    put_pixel(t_coordinates *coordinates, t_gen_res *gen_data)
     pixel = 0;
     if (coordinates->x >= 0 && coordinates->x < gen_data->data->win_width && coordinates->y >= 0 && coordinates->y < gen_data->data->win_height)
     { 
-        pixel = (((int)coordinates->y * gen_data->img->line_length) + ((int)coordinates->x * (gen_data->img->bpp / 8)));
-        *(unsigned int *)(gen_data->img->img_data + pixel) = coordinates->color;
+        pixel = ((coordinates->y * gen_data->img->line_length) + (coordinates->x * (gen_data->img->bpp / 8)));
+        *(int *)(gen_data->img->img_data + pixel) = coordinates->color;
     }
 
+}
+void bresenham_line(float *x_step, float *y_step, t_coordinates *coordinates, t_gen_res *gen_data)
+{
+    int max;
+
+    max = 0;
+    *x_step = coordinates->x1 - coordinates->x;
+    *y_step = coordinates->y1 - coordinates->y;
+    max = maximum(mod(*x_step), mod(*y_step));
+    *x_step /= max;
+    *y_step /= max;
+    while ((int)(coordinates->x - coordinates->x1) || (int)(coordinates->y - coordinates->y1))
+    {
+        put_pixel(coordinates, gen_data);
+        coordinates->x += *x_step;
+        coordinates->y += *y_step;
+    }
 }
 void bresenham(t_coordinates *coordinates, t_gen_res *gen_data)
 {
     float x_step;
     float y_step;
-    int max;
+    int color;
 
-    max = 0;
+
     x_step = 0;
     y_step = 0;
     coordinates->z = 0;
@@ -104,19 +124,7 @@ void bresenham(t_coordinates *coordinates, t_gen_res *gen_data)
     isometric(&coordinates->x, &coordinates->y, coordinates->z, gen_data->graphics);
     isometric(&coordinates->x1, &coordinates->y1, coordinates->z1, gen_data->graphics);
     shift(coordinates, gen_data->graphics);
-    x_step = coordinates->x1 - coordinates->x;
-    y_step = coordinates->y1 - coordinates->y;
-    max = maximum(mod(x_step), mod(y_step));
-    x_step /= max;
-    y_step /= max;
-    while ((int)(coordinates->x - coordinates->x1) || (int)(coordinates->y - coordinates->y1))
-    {
-        put_pixel(coordinates, gen_data);
-        //mlx_pixel_put(gen_data->data->mlx_ptr, gen_data->data->win_ptr, coordinates->x, coordinates->y, coordinates->color);
-        coordinates->x += x_step;
-        coordinates->y += y_step;
-    }
-    mlx_put_image_to_window(gen_data->data->mlx_ptr, gen_data->data->win_ptr, gen_data->img->img_ptr, 0, 0);
+    bresenham_line(&x_step, &y_step, coordinates, gen_data);
 }
 
 
@@ -142,4 +150,5 @@ Função que desenha linhas entre os pontos.
          }
          coordinates.y++;
      }
+     mlx_put_image_to_window(gen_data->data->mlx_ptr, gen_data->data->win_ptr, gen_data->img->img_ptr, 0, 0);
 }
