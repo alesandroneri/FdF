@@ -1,6 +1,11 @@
 NAME = fdf
-LIBFT = libft/
-MLX = minilibx-linux/
+
+LIBFT_PATH=	libft/
+MINILIB_PATH= minilibx-linux/
+
+LIBFT_A=	$(LIBFT_PATH)libft.a
+MINILIB_A= 	$(MINILIB_PATH)libmlx_linux.a
+
 SRC =	fdf.c \
 		src/map/read_file.c \
 		src/graphics/draw.c \
@@ -16,9 +21,8 @@ CC_FLAGS = -g -Wall -Wextra -Werror -I$(INCLUDE)
 
 OBJS = $(SRC:.c=.o)
 
-
 $(NAME): $(OBJS)
-	$(CC) $(CC_FLAGS) $(OBJS) -L libft/libft.a minilibx-linux/libmlx.a -lmlx -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -L $(LIBFT_PATH) -lft -L $(MINILIB_PATH) -lmlx -lX11 -lXext -lft -lm -lz -o $(NAME)
 
 .c.o:
 	$(CC) $(CC_FLAGS) -c $< -o $(<:.c=.o)
@@ -34,10 +38,9 @@ re: fclean $(NAME)
 	make fclean -C $(LIBFT)
 	make fclean -C $(MLX)
 
-run: re
-	clear
-	$(CC) $(CC_FLAGS) main.c $(NAME)
-	./a.out test_maps/42.fdf
+run: $(NAME)
+	@clear
+	@./$(NAME) ./mwx.fdf
 
 r:
 	make fclean -C $(LIBFT)

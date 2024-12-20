@@ -26,7 +26,7 @@ typedef struct s_point
 } t_point;
 
 
-// Struct com as coordenadas colocar os pixels na tela
+// Struct com as coordenadas para colocar os pixels na tela
 typedef struct s_coordinates
 {
     float x; // Coordenada 2D
@@ -82,7 +82,7 @@ typedef struct s_gen_res
 void read_file(char *file_name, t_fdf *data);
 void bresenham(t_coordinates *coordinates, t_gen_res *gen_data);
 void draw(t_gen_res *gen_data);
-
+void reset_image(t_fdf *data, t_img *img);
 
 // Funções de liberação de memória
 void    free_data(t_fdf *data);

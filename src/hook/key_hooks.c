@@ -15,7 +15,7 @@ void movement_keys(int key, t_gen_res *gen_data)
 // Função para ajustar o zoom do mapa
 void zoom_keys(int key, t_gen_res *gen_data)
 {
-    if (key == KEYCAP_PLUS_SIGN && gen_data->graphics->zoom < 21) // Aumenta o zoom
+    if (key == KEYCAP_PLUS_SIGN && gen_data->graphics->zoom < 50) // Aumenta o zoom
         gen_data->graphics->zoom += 1;
     if (key == KEYCAP_MINUS_SIGN && gen_data->graphics->zoom > 3) // Diminui o zoom
         gen_data->graphics->zoom -= 1;
@@ -26,22 +26,22 @@ void zoom_keys(int key, t_gen_res *gen_data)
 void depth_keys(int key, t_gen_res *gen_data)
 {
     if (key == KEYCAP_NB_8) // Aumenta o relevo
-        gen_data->graphics->depth_factor += 0.1;
+        gen_data->graphics->depth_factor += 0.1f;
     if (key == KEYCAP_NB_2) // Diminui o relevo
-        gen_data->graphics->depth_factor -= 0.1;
+        gen_data->graphics->depth_factor -= 0.1f;
 }
 
 // Função para rotacionar o mapa
 void rotation_keys(int key, t_gen_res *gen_data)
 {
     if (key == KEYCAP_ARROW_UP) // Rotaciona o mapa de baixo para cima.
-        gen_data->graphics->angle_x += 0.1;
+        gen_data->graphics->angle_x += 0.1f;
     if (key == KEYCAP_ARROW_DOWN) // Rotaciona o mapa de cima para baixo.
-        gen_data->graphics->angle_x -= 0.1;
+        gen_data->graphics->angle_x -= 0.1f;
     if (key == KEYCAP_ARROW_RIGHT) // Rotaciona o mapa da esquerda para direita
-        gen_data->graphics->angle_y += 0.1;
+        gen_data->graphics->angle_y += 0.1f;
     if (key == KEYCAP_ARROW_LEFT) // Rotaciona o mapa da direita para a esquerda
-        gen_data->graphics->angle_y -= 0.1;
+        gen_data->graphics->angle_y -= 0.1f;
 }
 void exit_keys(int key, t_gen_res *gen_data)
 {

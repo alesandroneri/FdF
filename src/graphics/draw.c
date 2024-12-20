@@ -19,7 +19,8 @@ static float mod(float i)
 void reset_image(t_fdf *data, t_img *img) 
 {
     ft_printf("START - reset_image\n");
-    mlx_destroy_image(data->mlx_ptr, img->img_ptr);
+    if (data->mlx_ptr && img->img_ptr)
+        mlx_destroy_image(data->mlx_ptr, img->img_ptr); // remover isso aqui porque a imagem nao foi destruida
     img->img_ptr = mlx_new_image(data->mlx_ptr, data->win_width, data->win_height);
     img->img_data = mlx_get_data_addr(img->img_ptr, &img->bpp, &img->line_length, &img->endian);
     ft_printf("END - reset_image\n");
@@ -32,7 +33,9 @@ static void initial_values(t_coordinates *coordinates, t_fdf *data)
     coordinates->z = data->z_matrix[(int)(((coordinates->y) * data->width) + coordinates->x)].z_value;
     coordinates->z1 = data->z_matrix[(int)(((coordinates->y1) * data->width) + coordinates->x1)].z_value;
     // Acessar a cor inicial
+    //coordinates->color = 0xffffff;
 	coordinates->color = ft_atoi_base(data->z_matrix[(int)(((coordinates->y) * data->width) + (coordinates->x))].color_hex, 16);
+    // coordinates->color = ft_atoi_hexa(data->z_matrix[(int)(((coordinates->y) * data->width) + (coordinates->x))].color_hex);
     ft_printf("END - initial_values\n");
 }
 
@@ -41,10 +44,10 @@ void center_map(t_coordinates *coordinates, t_gen_res *gen_data)
 {   
     ft_printf("START - center_map\n");
     // Centralizar o mapa
-    coordinates->x -= (gen_data->data->width - 1) * (gen_data->graphics->zoom / 2.0);
-	coordinates->y -= (gen_data->data->height - 1) * (gen_data->graphics->zoom / 2.0);
-	coordinates->x1 -= (gen_data->data->width - 1) * (gen_data->graphics->zoom / 2.0);
-	coordinates->y1 -= (gen_data->data->height - 1) * (gen_data->graphics->zoom / 2.0);
+    coordinates->x -= (gen_data->data->width - 1) * gen_data->graphics->zoom / 2.0;
+	coordinates->y -= (gen_data->data->height - 1) * gen_data->graphics->zoom / 2.0;
+	coordinates->x1 -= (gen_data->data->width - 1) * gen_data->graphics->zoom / 2.0;
+	coordinates->y1 -= (gen_data->data->height - 1) * gen_data->graphics->zoom / 2.0;
     ft_printf("END - center_map\n");
 }
 
@@ -102,9 +105,9 @@ static void    put_pixel(t_coordinates *coordinates, t_gen_res *gen_data)
     int pixel;
 
     pixel = 0;
-    if (coordinates->x >= 0 && coordinates->x < gen_data->data->win_width && coordinates->y >= 0 && coordinates->y < gen_data->data->win_height)
+    if ((coordinates->x >= 0 && (coordinates->x < gen_data->data->win_width)) && (coordinates->y >= 0 && (coordinates->y < gen_data->data->win_height)))
     { 
-        pixel = (coordinates->y * gen_data->img->line_length + coordinates->x * (gen_data->img->bpp / 8));
+        pixel = ((coordinates->y * gen_data->img->line_length) + (coordinates->x * (gen_data->img->bpp / 8)));
         *(int *)(gen_data->img->img_data + pixel) = coordinates->color;
     }
     ft_printf("END - put_pixel\n");
@@ -138,7 +141,6 @@ void bresenham(t_coordinates *coordinates, t_gen_res *gen_data)
     float x_step;
     float y_step;
 
-
     x_step = 0;
     y_step = 0;
     coordinates->z = 0;
@@ -154,7 +156,21 @@ void bresenham(t_coordinates *coordinates, t_gen_res *gen_data)
     ft_printf("END - bresenham\n");
 }
 
-
+void teste(t_coordinates *coordinates, t_gen_res *gen_data)
+{
+    if (coordinates->x < gen_data->data->width - 1)
+            {
+                coordinates->x1 = coordinates->x + 1;
+                coordinates->y1 = coordinates->y;
+                bresenham(coordinates, gen_data);
+            }
+            if (coordinates->y < gen_data->data->height - 1)
+            {
+                coordinates->x1 = coordinates->x;
+                coordinates->y1 = coordinates->y + 1;
+                bresenham(coordinates, gen_data);
+            }
+}
 /*
 Função que desenha linhas entre os pontos.
 */
@@ -162,7 +178,7 @@ Função que desenha linhas entre os pontos.
  void draw(t_gen_res *gen_data)
  {
     ft_printf("START - draw\n");
-    reset_image(gen_data->data, gen_data->img);
+    // reset_image(gen_data->data, gen_data->img);
     t_coordinates coordinates;
 
      coordinates.y = 0;
@@ -171,14 +187,32 @@ Função que desenha linhas entre os pontos.
          coordinates.x = 0;
          while(coordinates.x < gen_data->data->width)
          {
-            if (coordinates.x < gen_data->data->width - 1)
-                bresenham(&coordinates, gen_data);
-            if (coordinates.y < gen_data->data->height - 1)
-                bresenham(&coordinates, gen_data);
-             coordinates.x++;
+            // if (coordinates.x < gen_data->data->width - 1)
+            // {
+            //     coordinates.x1 = coordinates.x + 1;
+            //     coordinates.y1 = coordinates.y;
+            //     bresenham(&coordinates, gen_data);
+            // }
+            // if (coordinates.y < gen_data->data->height - 1)
+            // {
+            //     coordinates.x1 = coordinates.x;
+            //     coordinates.y1 = coordinates.y + 1;
+            //     bresenham(&coordinates, gen_data);
+            // }
+            teste(&coordinates, gen_data);
+            coordinates.x++;
          }
          coordinates.y++;
      }
      mlx_put_image_to_window(gen_data->data->mlx_ptr, gen_data->data->win_ptr, gen_data->img->img_ptr, 0, 0);
+     mlx_string_put(gen_data->data->mlx_ptr, gen_data->data->win_ptr, 10, 10, 0xFFFFFF, ft_itoa(gen_data->data->width));
+     mlx_string_put(gen_data->data->mlx_ptr, gen_data->data->win_ptr, 10, 30, 0xFFFFFF, ft_itoa(gen_data->data->height));
+     mlx_string_put(gen_data->data->mlx_ptr, gen_data->data->win_ptr, 10, 50, 0xFFFFFF, ft_itoa(gen_data->data->win_width));
+     mlx_string_put(gen_data->data->mlx_ptr, gen_data->data->win_ptr, 10, 70, 0xFFFFFF, ft_itoa(gen_data->data->win_height));
+     mlx_string_put(gen_data->data->mlx_ptr, gen_data->data->win_ptr, 10, 90, 0xFFFFFF, ft_itoa(gen_data->graphics->shift_x));
+     mlx_string_put(gen_data->data->mlx_ptr, gen_data->data->win_ptr, 10, 110, 0xFFFFFF, ft_itoa(gen_data->graphics->shift_y));
+     mlx_string_put(gen_data->data->mlx_ptr, gen_data->data->win_ptr, 10, 130, 0xFFFFFF, ft_itoa(gen_data->graphics->angle_x));
+     mlx_string_put(gen_data->data->mlx_ptr, gen_data->data->win_ptr, 10, 150, 0xFFFFFF, ft_itoa(gen_data->graphics->angle_y));
+     mlx_string_put(gen_data->data->mlx_ptr, gen_data->data->win_ptr, 10, 170, 0xFFFFFF, ft_itoa(gen_data->graphics->zoom));
      ft_printf("END - draw\n");
 }

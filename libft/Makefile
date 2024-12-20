@@ -11,6 +11,7 @@ SRCS =	ft_strchr.c \
 	ft_isdigit.c \
 	ft_putendl_fd.c \
 	ft_atoi_hexa.c \
+	ft_itoa.c \
 	ft_printf/ft_printf.c \
 	ft_printf/ft_putstr_count.c \
 	ft_printf/ft_putnbr_count.c \

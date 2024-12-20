@@ -30,6 +30,7 @@ int		ft_atoi_base(char *str, int str_base);
 int	ft_isdigit(int c);
 int	ft_atoi_hexa(const char *str);
 void	ft_putendl_fd(char *s, int fd);
+char	*ft_itoa(int n);
 
 
 /*

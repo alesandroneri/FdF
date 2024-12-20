@@ -82,6 +82,7 @@ int	get_width(char *file_name)
 	return (width);
 }
 
+// Tratar as cores do mapa
 int check_color(char *num, t_point *z_line)
 {
 	ft_printf("START - check_color\n");
@@ -89,17 +90,18 @@ int check_color(char *num, t_point *z_line)
 
     value_and_color = ft_split(num, ',');
     if (!value_and_color)
-        return (0);
+		return (0);
     // Se a split retornou apenas um elemento, trate isso como um caso especial
-    if (value_and_color[1] == NULL)
+	z_line->z_value = ft_atoi(value_and_color[0]); // Converta o valor
+    if (value_and_color[1])
 	{
-        z_line->z_value = ft_atoi(value_and_color[0]); // Converta o valor
-        z_line->color_hex = ft_strdup("0xFFFFFF"); // Cor padrão
+        //z_line->z_value = ft_atoi(value_and_color[0]); // Converta o valor
+        z_line->color_hex = ft_strdup(value_and_color[1]); // Cor hexadecimal
     }
 	else
 	{
-        z_line->z_value = ft_atoi(value_and_color[0]);
-        z_line->color_hex = ft_strdup(value_and_color[1]);
+        //z_line->z_value = ft_atoi(value_and_color[0]);
+        z_line->color_hex = ft_strdup("0xFFFFFF"); // COr padrão
     }
     // Libere a memória alocada
     free(value_and_color[0]);
@@ -118,7 +120,6 @@ void	fill_matrix(t_point *z_line, char *line)
 	ft_printf("START - fill_matrix\n");
 	char	**nums;
 	int		i;
-	char	**value_and_color;
 	
 	i = 0;
 	nums = ft_split(line, ' ');
@@ -128,7 +129,7 @@ void	fill_matrix(t_point *z_line, char *line)
 		free(nums);
 		return ;
 	}
-	while(nums[i])
+	while(nums[i] != NULL)
 	{
 		if (!check_color(nums[i], &z_line[i]))
 		{
@@ -158,7 +159,7 @@ void	read_file(char *file_name, t_fdf *data)
 	fd = open(file_name, O_RDONLY);
 	if (fd < 0)
 		return ;
-	data->z_matrix = (t_point *)malloc(sizeof(t_point) * (data->height * data->width));
+	data->z_matrix = (t_point *)malloc(sizeof(t_point) * data->height * data->width);
 	if (!data->z_matrix)
 		return ;
 	i = 0;

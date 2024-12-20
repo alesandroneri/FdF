@@ -1,7 +1,9 @@
 #ifndef KEYS_H
 #define KEYS_H
 
+#include <stdbool.h>
 #include "../../fdf.h"
+
 
 // Teclas para movimentação do mapa
 #define KEYCAP_A 97
