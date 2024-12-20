@@ -31,8 +31,8 @@ int		ft_atoi_base(char *str, int str_base)
     i = 0;
 	result = 0;
     sign = 1;
-	if (!str || str_base < 2 || str_base > 16 || *str == '\0')
-		return (0);
+	//if (!str || str_base < 2 || str_base > 16 || *str == '\0')
+	//	return (0);
 	while (str[i] <= 32 || str[i] == 127)
 		i++;
     if (str[i] == '0' && (str[i + 1] == 'x' || str[i + 1] == 'X') && str_base == 16)

@@ -3,6 +3,7 @@
 // Função para liberar a matriz
 void    free_data(t_fdf *data)
 {
+    ft_printf("START - free_data\n");
     int i;
 
     i = 0;
@@ -23,22 +24,26 @@ void    free_data(t_fdf *data)
         free(data->win_ptr);
     free(data);
     data = NULL;
+    ft_printf("END - free_data\n");
 }
 
 // Função para liberar os recursos das structs
 void free_resources(t_gen_res *gen_data)
 {
+    ft_printf("START - free_resources\n");
     if (gen_data->graphics)
         free(gen_data->graphics);
     if (gen_data->img)
         free(gen_data->img);
     if (gen_data->data)
         free(gen_data->data);
+    ft_printf("END - free_resources\n");
 }
 
 // Função para liberar o server, janela, display e imagem
 void free_server(t_gen_res *gen_data)
 {
+    ft_printf("START - free_server\n");
     if (!gen_data->data)
         return ;
     // Libera o display
@@ -64,4 +69,5 @@ void free_server(t_gen_res *gen_data)
     // Libera os dados
     if (gen_data->data)
         free(gen_data->data);
+    ft_printf("END - free_server\n");
 }
