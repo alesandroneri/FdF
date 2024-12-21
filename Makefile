@@ -47,7 +47,7 @@ re: fclean $(NAME)
 
 run: $(NAME)
 	@clear
-	@./$(NAME) ./test_maps/42.fdf
+	@./$(NAME) ./test_maps/mars.fdf
 
 r:
 	@make fclean -C $(LIBFT_PATH)

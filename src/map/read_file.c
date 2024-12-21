@@ -38,7 +38,6 @@ Pegar altura da imagem.
 */
 int	get_height(char *file_name)
 {
-	ft_printf("START - get_height\n");
 	char	*line;
 	int	height;
 	int	fd;
@@ -54,7 +53,6 @@ int	get_height(char *file_name)
 		line = NULL;
 	}
 	close(fd);
-	ft_printf("END - get_height\n");
 	return (height);
 }
 /*
@@ -62,7 +60,6 @@ Pegar largura da imagem.
 */
 int	get_width(char *file_name)
 {
-	ft_printf("START - get_width\n");
 	char	*line;
 	int	width;
 	int	fd;
@@ -78,14 +75,12 @@ int	get_width(char *file_name)
 	while ((line = get_next_line(fd)) != NULL)
 		free(line);
 	close(fd);
-	ft_printf("END - get_width\n");
 	return (width);
 }
 
 // Tratar as cores do mapa
 int check_color(char *num, t_point *z_line)
 {
-	ft_printf("START - check_color\n");
 	char **value_and_color;
 
     value_and_color = ft_split(num, ',');
@@ -108,7 +103,6 @@ int check_color(char *num, t_point *z_line)
     if (value_and_color[1])
         free(value_and_color[1]);
     free(value_and_color);
-	ft_printf("END - check_color\n");
     return (1); // Retorne sucesso
 }
 
@@ -117,7 +111,6 @@ Preencher a matrix bidimensasional com os numeros para que possamos ler o mapa a
 */
 void	fill_matrix(t_point *z_line, char *line)
 {
-	ft_printf("START - fill_matrix\n");
 	char	**nums;
 	int		i;
 	
@@ -140,14 +133,12 @@ void	fill_matrix(t_point *z_line, char *line)
 		i++;
 	}
 	free(nums);
-	ft_printf("END - fill_matrix\n");
 }
 /*
 Ler o arquivo corretamaente.
 */
 void	read_file(char *file_name, t_fdf *data)
 {
-	ft_printf("START - read_file\n");
 	char	*line;
 	int	fd;
 	int	i;
@@ -173,5 +164,4 @@ void	read_file(char *file_name, t_fdf *data)
 		i++;
 	}
 	close(fd);
-	ft_printf("END - read_file\n");
 }

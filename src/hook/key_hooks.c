@@ -4,13 +4,13 @@
 void movement_keys(int key, t_gen_res *gen_data)
 {
     if(key == KEYCAP_A) // Move o mapa para a direita
-        gen_data->graphics->shift_x -=10;
+        gen_data->graphics->shift_x -= 10;
     if(key == KEYCAP_D) // Move o mapa para a esquerda
-        gen_data->graphics->shift_x +=10;
+        gen_data->graphics->shift_x += 10;
     if(key == KEYCAP_W) // Move o mapa para cima
-        gen_data->graphics->shift_y -=10;
+        gen_data->graphics->shift_y -= 10;
     if(key == KEYCAP_S) // Move o mapa para baixo
-        gen_data->graphics->shift_y +=10;
+        gen_data->graphics->shift_y += 10;
 }
 // Função para ajustar o zoom do mapa
 void zoom_keys(int key, t_gen_res *gen_data)
@@ -52,5 +52,5 @@ void exit_keys(int key, t_gen_res *gen_data)
         free(gen_data->data);
         exit(0);
     }
-        //return (gen_data->data->mlx_ptr);
+    // return (gen_data->data->mlx_ptr);
 }
