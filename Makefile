@@ -15,11 +15,11 @@ SRC =	fdf.c \
 
 CC = cc
 
-INCLUDE = includes
-
-CC_FLAGS = -g -Wall -Wextra -Werror -I$(INCLUDE)
+CC_FLAGS = -g -Wall -Wextra -Werror
 
 OBJS = $(SRC:.c=.o)
+
+all: $(MINILIB_A) $(LIBFT_A) $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -L $(LIBFT_PATH) -lft -L $(MINILIB_PATH) -lmlx -lX11 -lXext -lft -lm -lz -o $(NAME)
@@ -27,26 +27,34 @@ $(NAME): $(OBJS)
 .c.o:
 	$(CC) $(CC_FLAGS) -c $< -o $(<:.c=.o)
 
-all: $(NAME)
+$(MINILIB_A):
+	@make -C $(MINILIB_PATH)
+
+$(LIBFT_A):
+	@make -C $(LIBFT_PATH)
 
 clean:
-	rm -f $(OBJS) 
+	@rm -f $(OBJS) 
+
 fclean: clean
-	rm -rf $(NAME)
+	@make fclean -C $(LIBFT_PATH)
+	@make clean -C $(MINILIB_PATH)
+	@rm -rf $(NAME)
 
 re: fclean $(NAME)
-	make fclean -C $(LIBFT)
-	make fclean -C $(MLX)
+	@make fclean -C $(LIBFT_PATH)
+	@make clean -C $(MINILIB_PATH)
 
 run: $(NAME)
 	@clear
-	@./$(NAME) ./mwx.fdf
+	@./$(NAME) ./test_maps/42.fdf
 
 r:
-	make fclean -C $(LIBFT)
-	make -C $(LIBFT)
-	make clean -C $(LIBFT)
+	@make fclean -C $(LIBFT_PATH)
+	@make -C $(LIBFT_PATH)
+	@make clean -C $(LIBFT_PATH)
+
 val:
-	valgrind ./a.out test_maps/42.fdf
+	valgrind ./fdf test_maps/42.fdf
 
 .PHONY: all clean fclean re run bonus

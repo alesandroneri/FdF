@@ -23,7 +23,7 @@ static int handle_keys(int key, t_gen_res *gen_data)
     depth_keys(key, gen_data); // Chama a função que lida com ajustes de relevo no mapa
     rotation_keys(key, gen_data); // Chama a função que lida com rotação do mapa
     exit_keys(key, gen_data); // Chama a função que lida com o fechamento do mapa pressionando o esc
-    mlx_clear_window(gen_data->data->mlx_ptr, gen_data->data->win_ptr); // Destroi a imagem para atualizar o que ocorreu no mapa apos um hook
+    //mlx_clear_window(gen_data->data->mlx_ptr, gen_data->data->win_ptr); // Destroi a imagem para atualizar o que ocorreu no mapa apos um hook
     draw(gen_data); // Desenha novamente o mapa atualizado 
     ft_printf("END - handle_keys\n");
     return (0);

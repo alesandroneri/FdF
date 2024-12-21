@@ -80,7 +80,7 @@ typedef struct s_gen_res
 } t_gen_res;
 
 void read_file(char *file_name, t_fdf *data);
-void bresenham(t_coordinates *coordinates, t_gen_res *gen_data);
+void bresenham(t_coordinates coordinates, t_gen_res *gen_data);
 void draw(t_gen_res *gen_data);
 void reset_image(t_fdf *data, t_img *img);
 

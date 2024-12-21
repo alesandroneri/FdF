@@ -10,12 +10,7 @@
 void setup_image(t_gen_res *gen_data)
 {
     ft_printf("START - setup_image\n");
-    // if (!gen_data->data || !gen_data->data->mlx_ptr || !gen_data->data->win_ptr) 
-    // {
-    //     ft_putendl_fd("Erro: Estruturas necessárias não foram inicializadas.\n", 2);
-    //     exit(0);
-    // }
-    gen_data->img->img_ptr= mlx_new_image(gen_data->data->mlx_ptr, gen_data->data->width, gen_data->data->height);
+    gen_data->img->img_ptr= mlx_new_image(gen_data->data->mlx_ptr, gen_data->data->win_width, gen_data->data->win_height);
     if (!gen_data->img->img_ptr)
         exit(0);
     gen_data->img->img_data = mlx_get_data_addr(gen_data->img->img_ptr, &gen_data->img->bpp, &gen_data->img->line_length, &gen_data->img->endian);
