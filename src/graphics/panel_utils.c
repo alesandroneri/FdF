@@ -16,7 +16,7 @@ int get_text_size(char *str)
     return (i);
 }
 
-static void draw_text(t_coordinates *coordinates, char *text, char *value, t_gen_res *gen_data)
+void draw_text(t_coordinates *coordinates, char *text, char *value, t_gen_res *gen_data)
 {
     int name_size;
 

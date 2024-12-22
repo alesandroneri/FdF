@@ -8,21 +8,6 @@ static void reset_image(t_fdf *data, t_img *img)
     img->img_data = mlx_get_data_addr(img->img_ptr, &img->bpp, &img->line_length, &img->endian);
 }
 
-static void setup_coordinates(t_coordinates coordinates, t_gen_res *gen_data)
-{
-    if (coordinates.x < gen_data->data->width - 1)
-    {
-        coordinates.x1 = coordinates.x + 1;
-        coordinates.y1 = coordinates.y;
-        bresenham(coordinates, gen_data);
-    }
-    if (coordinates.y < gen_data->data->height - 1)
-    {
-        coordinates.x1 = coordinates.x;
-        coordinates.y1 = coordinates.y + 1;
-        bresenham(coordinates, gen_data);
-    }
-}
 static void bresenham_line(t_coordinates coordinates, t_gen_res *gen_data)
 {
     float x_step;
@@ -60,6 +45,21 @@ static void bresenham(t_coordinates coordinates, t_gen_res *gen_data)
     shift(&coordinates, gen_data->graphics);
     bresenham_line(coordinates, gen_data);
     
+}
+static void setup_coordinates(t_coordinates coordinates, t_gen_res *gen_data)
+{
+    if (coordinates.x < gen_data->data->width - 1)
+    {
+        coordinates.x1 = coordinates.x + 1;
+        coordinates.y1 = coordinates.y;
+        bresenham(coordinates, gen_data);
+    }
+    if (coordinates.y < gen_data->data->height - 1)
+    {
+        coordinates.x1 = coordinates.x;
+        coordinates.y1 = coordinates.y + 1;
+        bresenham(coordinates, gen_data);
+    }
 }
 
  void draw(t_gen_res *gen_data)

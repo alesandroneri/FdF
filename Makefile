@@ -9,6 +9,9 @@ MINILIB_A= 	$(MINILIB_PATH)libmlx_linux.a
 SRC =	fdf.c \
 		src/map/read_file.c \
 		src/graphics/draw.c \
+		src/graphics/draw_utils.c \
+		src/graphics/graphics_features.c \
+		src/graphics/panel_utils.c \
 		src/free/free_utils.c \
 		src/hook/handle_hooks.c \
 		src/hook/key_hooks.c
@@ -47,7 +50,7 @@ re: fclean $(NAME)
 
 run: $(NAME)
 	@clear
-	@./$(NAME) ./test_maps/mars.fdf
+	@./$(NAME) ./test_maps/42.fdf
 
 r:
 	@make fclean -C $(LIBFT_PATH)

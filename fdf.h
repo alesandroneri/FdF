@@ -80,12 +80,28 @@ typedef struct s_gen_res
 } t_gen_res;
 
 void read_file(char *file_name, t_fdf *data);
-void bresenham(t_coordinates coordinates, t_gen_res *gen_data);
+
+// graphic
+//void bresenham(t_coordinates coordinates, t_gen_res *gen_data);
 void draw(t_gen_res *gen_data);
-void reset_image(t_fdf *data, t_img *img);
+int maximum(int a, int b);
+float mod(float i);
+void initial_values(t_coordinates *coordinates, t_fdf *data);
+void	isometric(float *x, float *y, int z, t_graphics *graphics);
+void    put_pixel(t_coordinates *coordinates, t_gen_res *gen_data);
+
+// panel functions
+int get_text_size(char *str);
+void draw_text(t_coordinates *coordinates, char *text, char *value, t_gen_res *gen_data);
+void    draw_panel_info(t_gen_res *gen_data);
+
+// graphic features
+void center_map(t_coordinates *coordinates, t_gen_res *gen_data);
+void zoom(t_coordinates *coordinates, t_graphics *graphics);
+void shift(t_coordinates *coordinates, t_graphics *graphics);
 
 // Funções de liberação de memória
-void    free_data(t_fdf *data);
+void free_data(t_fdf *data);
 void free_resources(t_gen_res *gen_data);
 void free_server(t_gen_res *gen_data);
 
