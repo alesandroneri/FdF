@@ -86,7 +86,7 @@ char	*get_next_line(int fd)
 	char		*newline;
 
 	buffer = checking_malloc_read_fd(fd);
-	if(!buffer)
+	if (!buffer)
 		return (NULL);
 	newline = ft_strchr(reminder, '\n');
 	while (!newline)
@@ -95,10 +95,9 @@ char	*get_next_line(int fd)
 		{
 			if (!reminder || !*reminder)
 			{
-				free(buffer);
 				free(reminder);
 				reminder = NULL;
-				return (NULL);
+				return (free(buffer), NULL);
 			}
 			break ;
 		}

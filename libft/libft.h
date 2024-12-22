@@ -12,11 +12,10 @@
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdarg.h>
 # include <fcntl.h>
-
+# include <stdarg.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 size_t	ft_strlen(const char *s);
 void	*ft_memset(void *s, int c, size_t n);
@@ -27,16 +26,15 @@ char	*ft_strdup(const char *s);
 char	**ft_split(char const *s, char c);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_atoi_base(char *str, int str_base);
-int	ft_isdigit(int c);
-int	ft_atoi_hexa(const char *str);
+int		ft_isdigit(int c);
+int		ft_atoi_hexa(const char *str);
 void	ft_putendl_fd(char *s, int fd);
 char	*ft_itoa(int n);
-
 
 /*
 ft_printf functions.
 */
-int		ft_put_ptr(void	*ptr);
+int		ft_put_ptr(void *ptr);
 int		ft_putchar_count(char c);
 int		ft_putstr_count(char *str);
 int		ft_putnbr_count(int nb);

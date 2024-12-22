@@ -11,60 +11,37 @@
 /* ************************************************************************** */
 #include "../../fdf.h"
 
-int	ft_count_words(char const *str, char sep)
-{
-	int	count;
-	int	word;
-	int	i;
-
-	count = 0;
-	word = 0;
-	i = 0;
-	while (str != NULL && str[i] != '\0')
-	{
-		if (str[i] != sep && word == 0)
-		{
-			count++;
-			word = 1;
-		}
-		else if (str[i] == sep)
-			word = 0;
-		i++;
-	}
-	return (count);
-}
-/*
-Pegar altura da imagem.
-*/
-int	get_height(char *file_name)
+static int	get_height(char *file_name)
 {
 	char	*line;
-	int	height;
-	int	fd;
-	
+	int		height;
+	int		fd;
+
 	height = 0;
 	fd = open(file_name, O_RDONLY, 0);
 	if (fd < 0)
 		return (-1);
-	while ((line = get_next_line(fd)) != NULL)
+	line = get_next_line(fd);
+	while (line != NULL)
 	{
 		height++;
 		free(line);
 		line = NULL;
+		line = get_next_line(fd);
 	}
 	close(fd);
 	return (height);
 }
-/*
-Pegar largura da imagem.
-*/
-int	get_width(char *file_name)
+
+static int	get_width(char *file_name)
 {
 	char	*line;
-	int	width;
-	int	fd;
+	int		width;
+	int		fd;
 
 	fd = open(file_name, O_RDONLY, 0);
+	if (fd < 0)
+		return (-1);
 	line = get_next_line(fd);
 	if (line != NULL)
 	{
@@ -72,57 +49,54 @@ int	get_width(char *file_name)
 		free(line);
 		line = NULL;
 	}
-	while ((line = get_next_line(fd)) != NULL)
+	line = get_next_line(fd);
+	while (line != NULL)
+	{
 		free(line);
+		line = NULL;
+		line = get_next_line(fd);
+	}
 	close(fd);
 	return (width);
 }
 
-// Tratar as cores do mapa
-int check_color(char *num, t_point *z_line)
+static int	check_color(char *num, t_point *z_line)
 {
-	char **value_and_color;
+	char	**value_and_color;
 
-    value_and_color = ft_split(num, ',');
-    if (!value_and_color)
+	value_and_color = ft_split(num, ',');
+	if (!value_and_color)
 		return (0);
-    // Se a split retornou apenas um elemento, trate isso como um caso especial
-	z_line->z_value = ft_atoi(value_and_color[0]); // Converta o valor
-    if (value_and_color[1])
+	z_line->z_value = ft_atoi(value_and_color[0]);
+	if (value_and_color[1])
+		z_line->color_hex = ft_strdup(value_and_color[1]);
+	if (!value_and_color[1])
 	{
-        //z_line->z_value = ft_atoi(value_and_color[0]); // Converta o valor
-        z_line->color_hex = ft_strdup(value_and_color[1]); // Cor hexadecimal
-    }
-	else
-	{
-        //z_line->z_value = ft_atoi(value_and_color[0]);
-        z_line->color_hex = ft_strdup("0xFFFFFF"); // COr padrão
-    }
-    // Libere a memória alocada
-    free(value_and_color[0]);
-    if (value_and_color[1])
-        free(value_and_color[1]);
-    free(value_and_color);
-    return (1); // Retorne sucesso
+		if (z_line->z_value > 0)
+			z_line->color_hex = ft_strdup("0xE80C8C");
+		else
+			z_line->color_hex = ft_strdup("0xFFFFFF");
+	}
+	free(value_and_color[0]);
+	if (value_and_color[1])
+		free(value_and_color[1]);
+	free(value_and_color);
+	return (1);
 }
 
-/*
-Preencher a matrix bidimensasional com os numeros para que possamos ler o mapa adequadamente.
-*/
-void	fill_matrix(t_point *z_line, char *line)
+static void	fill_matrix(t_point *z_line, char *line)
 {
 	char	**nums;
 	int		i;
-	
+
 	i = 0;
 	nums = ft_split(line, ' ');
 	if (!nums)
 	{
-		free(line);
 		free(nums);
 		return ;
 	}
-	while(nums[i] != NULL)
+	while (nums[i] != NULL)
 	{
 		if (!check_color(nums[i], &z_line[i]))
 		{
@@ -133,35 +107,34 @@ void	fill_matrix(t_point *z_line, char *line)
 		i++;
 	}
 	free(nums);
+	free(line);
 }
-/*
-Ler o arquivo corretamaente.
-*/
-void	read_file(char *file_name, t_fdf *data)
+
+int	read_file(char *file_name, t_fdf *data)
 {
 	char	*line;
-	int	fd;
-	int	i;
+	int		fd;
+	int		i;
 
 	data->height = get_height(file_name);
 	data->width = get_width(file_name);
 	if (data->width <= 0 || data->height <= 0)
-		return ;
+		return (0);
 	fd = open(file_name, O_RDONLY);
 	if (fd < 0)
-		return ;
-	data->z_matrix = (t_point *)malloc(sizeof(t_point) * data->height * data->width);
+		return (0);
+	data->z_matrix = (t_point *)malloc(sizeof(t_point) * data->height
+			* data->width);
 	if (!data->z_matrix)
-		return ;
-	i = 0;
-	while (i < data->height)
+		return (0);
+	i = -1;
+	while (++i < data->height)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
 			break ;
 		fill_matrix(&data->z_matrix[i * data->width], line);
-		free(line);
-		i++;
 	}
-	close(fd);
+	line = get_next_line(fd);
+	return (close(fd), 1);
 }

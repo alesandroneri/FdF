@@ -1,56 +1,64 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key_hooks.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aneri-da <aneri-da@student.42.rio>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/22 17:00:43 by aneri-da          #+#    #+#             */
+/*   Updated: 2024/12/22 17:00:46 by aneri-da         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "keys.h"
 
-// Função para mover o mapa
-void movement_keys(int key, t_gen_res *gen_data)
+int	movement_keys(int key, t_gen_res *gen_data)
 {
-    if(key == KEYCAP_A) // Move o mapa para a direita
-        gen_data->graphics->shift_x -= 10;
-    if(key == KEYCAP_D) // Move o mapa para a esquerda
-        gen_data->graphics->shift_x += 10;
-    if(key == KEYCAP_W) // Move o mapa para cima
-        gen_data->graphics->shift_y -= 10;
-    if(key == KEYCAP_S) // Move o mapa para baixo
-        gen_data->graphics->shift_y += 10;
-}
-// Função para ajustar o zoom do mapa
-void zoom_keys(int key, t_gen_res *gen_data)
-{
-    if (key == KEYCAP_PLUS_SIGN && gen_data->graphics->zoom < 50) // Aumenta o zoom
-        gen_data->graphics->zoom += 1;
-    if (key == KEYCAP_MINUS_SIGN && gen_data->graphics->zoom > 3) // Diminui o zoom
-        gen_data->graphics->zoom -= 1;
-    
+	if (key == KEYCAP_A)
+		gen_data->graphics->shift_x -= 10;
+	else if (key == KEYCAP_D)
+		gen_data->graphics->shift_x += 10;
+	else if (key == KEYCAP_W)
+		gen_data->graphics->shift_y -= 10;
+	else if (key == KEYCAP_S)
+		gen_data->graphics->shift_y += 10;
+	else
+		return (0);
+	return (1);
 }
 
-// Função para ajustar o relevo do mapa
-void depth_keys(int key, t_gen_res *gen_data)
+int	zoom_keys(int key, t_gen_res *gen_data)
 {
-    if (key == KEYCAP_NB_8) // Aumenta o relevo
-        gen_data->graphics->depth_factor += 0.1f;
-    if (key == KEYCAP_NB_2) // Diminui o relevo
-        gen_data->graphics->depth_factor -= 0.1f;
+	if (key == KEYCAP_PLUS_SIGN && gen_data->graphics->zoom < 50)
+		gen_data->graphics->zoom += 1;
+	else if (key == KEYCAP_MINUS_SIGN && gen_data->graphics->zoom > 3)
+		gen_data->graphics->zoom -= 1;
+	else
+		return (0);
+	return (1);
 }
 
-// Função para rotacionar o mapa
-void rotation_keys(int key, t_gen_res *gen_data)
+int	depth_keys(int key, t_gen_res *gen_data)
 {
-    if (key == KEYCAP_ARROW_UP) // Rotaciona o mapa de baixo para cima.
-        gen_data->graphics->angle_x += 0.1f;
-    if (key == KEYCAP_ARROW_DOWN) // Rotaciona o mapa de cima para baixo.
-        gen_data->graphics->angle_x -= 0.1f;
-    if (key == KEYCAP_ARROW_RIGHT) // Rotaciona o mapa da esquerda para direita
-        gen_data->graphics->angle_y += 0.1f;
-    if (key == KEYCAP_ARROW_LEFT) // Rotaciona o mapa da direita para a esquerda
-        gen_data->graphics->angle_y -= 0.1f;
+	if (key == KEYCAP_NB_8)
+		gen_data->graphics->depth_factor += 0.1f;
+	else if (key == KEYCAP_NB_2)
+		gen_data->graphics->depth_factor -= 0.1f;
+	else
+		return (0);
+	return (1);
 }
-void exit_keys(int key, t_gen_res *gen_data)
+
+int	rotation_keys(int key, t_gen_res *gen_data)
 {
-    if (key == KEYCAP_ESC)
-    {
-        mlx_destroy_window(gen_data->data->mlx_ptr, gen_data->data->win_ptr);
-        free(gen_data->data->z_matrix);
-        free(gen_data->data);
-        exit(0);
-    }
-    // return (gen_data->data->mlx_ptr);
+	if (key == KEYCAP_ARROW_UP)
+		gen_data->graphics->angle_x += 0.1f;
+	else if (key == KEYCAP_ARROW_DOWN)
+		gen_data->graphics->angle_x -= 0.1f;
+	else if (key == KEYCAP_ARROW_RIGHT)
+		gen_data->graphics->angle_y += 0.1f;
+	else if (key == KEYCAP_ARROW_LEFT)
+		gen_data->graphics->angle_y -= 0.1f;
+	else
+		return (0);
+	return (1);
 }

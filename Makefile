@@ -8,6 +8,7 @@ MINILIB_A= 	$(MINILIB_PATH)libmlx_linux.a
 
 SRC =	fdf.c \
 		src/map/read_file.c \
+		src/map/read_file_utils.c \
 		src/graphics/draw.c \
 		src/graphics/draw_utils.c \
 		src/graphics/graphics_features.c \
@@ -38,6 +39,8 @@ $(LIBFT_A):
 
 clean:
 	@rm -f $(OBJS) 
+	@make clean -C $(MINILIB_PATH)
+	@make clean -C $(LIBFT_PATH)
 
 fclean: clean
 	@make fclean -C $(LIBFT_PATH)
@@ -50,7 +53,7 @@ re: fclean $(NAME)
 
 run: $(NAME)
 	@clear
-	@./$(NAME) ./test_maps/42.fdf
+	@./$(NAME) ./test_maps/julia.fdf
 
 r:
 	@make fclean -C $(LIBFT_PATH)
@@ -58,6 +61,9 @@ r:
 	@make clean -C $(LIBFT_PATH)
 
 val:
-	valgrind ./fdf test_maps/42.fdf
+	@valgrind ./fdf test_maps/42.fdf
 
-.PHONY: all clean fclean re run bonus
+comment:
+	@find . -type f -iname "*.c" -exec grep "//" {} +
+
+.PHONY: all clean fclean re run 

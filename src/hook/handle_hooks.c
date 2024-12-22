@@ -1,37 +1,41 @@
-#include "keys.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_hooks.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aneri-da <aneri-da@student.42.rio>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/22 17:00:13 by aneri-da          #+#    #+#             */
+/*   Updated: 2024/12/22 17:00:20 by aneri-da         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../../fdf.h"
+#include "keys.h"
 
-// // Evento de pressionar tecla
-// int key_press(int key, t_key *keys) {
-//     if (key == KEYCAP_ESC)
-//         exit(0);
-//     keys->keys[key] = true; // Marca a tecla como pressionada
-//     return 0;
-// }
-
-// // Evento de soltar tecla
-// int key_release(int key, t_key *keys) {
-//     keys->keys[key] = false; // Marca a tecla como liberada
-//     return 0;
-// }
-// Função para lidar com todos os eventos de teclado
-static int handle_keys(int key, t_gen_res *gen_data)
+static int	handle_keys(int key, t_gen_res *gen_data)
 {
-    movement_keys(key, gen_data); // Chama a função que lida com movimentos no mapa
-    zoom_keys(key, gen_data); // Chama a função que lida com ajuste de zoom no mapa
-    depth_keys(key, gen_data); // Chama a função que lida com ajustes de relevo no mapa
-    rotation_keys(key, gen_data); // Chama a função que lida com rotação do mapa
-    exit_keys(key, gen_data); // Chama a função que lida com o fechamento do mapa pressionando o esc
-    //mlx_clear_window(gen_data->data->mlx_ptr, gen_data->data->win_ptr); // Destroi a imagem para atualizar o que ocorreu no mapa apos um hook
-    draw(gen_data); // Desenha novamente o mapa atualizado 
-    return (0);
+	movement_keys(key, gen_data);
+	zoom_keys(key, gen_data);
+	depth_keys(key, gen_data);
+	rotation_keys(key, gen_data);
+	if (key == KEYCAP_ESC)
+	{
+		mlx_loop_end(gen_data->data->mlx_ptr);
+		return (0);
+	}
+	draw(gen_data);
+	return (0);
 }
 
-// Função para aguardar os eventos que foram pré-determinados anteriormente e executar as ações necessárias
-void   setup_hooks(t_gen_res *gen_data)
+static int	close_button(t_gen_res *gen_data)
 {
-    mlx_hook(gen_data->data->win_ptr, 17, 0, mlx_loop_end, gen_data->data->win_ptr); // Evento do botão "X"
-	mlx_key_hook(gen_data->data->win_ptr, handle_keys, gen_data); // Eventos de teclado
-    //mlx_loop_hook(gen_data->data->mlx_ptr, setup_hooks, gen_data);
+	mlx_loop_end(gen_data->data->mlx_ptr);
+	return (0);
 }
 
+void	setup_hooks(t_gen_res *gen_data)
+{
+	mlx_hook(gen_data->data->win_ptr, 17, 0, close_button, gen_data);
+	mlx_key_hook(gen_data->data->win_ptr, handle_keys, gen_data);
+	mlx_hook(gen_data->data->win_ptr, 1, (1L << 0), handle_keys, gen_data);
+}
